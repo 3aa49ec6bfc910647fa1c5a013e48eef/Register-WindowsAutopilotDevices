@@ -1,0 +1,34 @@
+name: Publish PowerShell Module
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PowerShellGet module
+        shell: pwsh
+        run: |
+          Install-Module -Name PowerShellGet -Force -Scope CurrentUser
+
+      - name: Validate Module Manifest
+        shell: pwsh
+        run: |
+          $modulePath = Join-Path $PWD 'Register-WindowsAutopilotDevices'
+          Test-ModuleManifest -Path (Join-Path $modulePath 'Register-WindowsAutopilotDevices.psd1')
+
+      - name: Publish PowerShell Module
+        shell: pwsh
+        env:
+          PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: |
+          $modulePath = Join-Path $PWD 'Register-WindowsAutopilotDevices'
+          Publish-Module -Path $modulePath -NuGetApiKey $env:PSGALLERY_API_KEY -Repository PSGallery -Force
