@@ -30,7 +30,10 @@ Function Register-WindowsAutopilotDevices {
         [switch]$Force,
 
         [Parameter(Mandatory = $false)]
-        [string]$GroupName
+        [string]$GroupName,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$FactoryReset
     )
 
     Begin {
@@ -104,8 +107,6 @@ Function Register-WindowsAutopilotDevices {
                     hardwareIdentifier = $hardwareIdentifierBytes
                 }
 
-                Write-Host $deviceIdentity
-
                 # Import the device
                 Write-Host "Importing device with serial number '$($deviceIdentity.serialNumber)'..."
                 $response = New-MgDeviceManagementImportedWindowsAutopilotDeviceIdentity -BodyParameter $deviceIdentity
@@ -123,6 +124,10 @@ Function Register-WindowsAutopilotDevices {
         finally {
             # Disconnect from Microsoft Graph
             Disconnect-MgGraph
+        }
+
+        if ($FactoryReset) {
+            & systemreset -factoryreset
         }
     }
 

@@ -3,7 +3,7 @@
     RootModule        = 'Register-WindowsAutopilotDevices.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.1.0'
+    ModuleVersion     = '0.1.1'
 
     # ID used to uniquely identify this module
     GUID              = '042a1497-2979-4ad4-afd2-314939ef8067' # Replace with a new GUID if necessary
